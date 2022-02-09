@@ -1,0 +1,66 @@
+version: '3.7'
+
+volumes:
+  postgres_data:
+
+x-postgres-env: &postgres-env
+  POSTGRES_HOST: cdkfullstack
+  POSTGRES_USER: cdkfullstack
+  POSTGRES_PASSWORD: cdkfullstack
+  POSTGRES_DB: cdkfullstack
+
+services:
+  app:
+    image: node:16.13.2
+    container_name: cdkfullstack-app
+    restart: unless-stopped
+    working_dir: /app
+    command: bash -c "npm install && npm start"
+    environment:
+      NODE_ENV: development
+      REACT_APP_API: http://localhost:8000
+      REACT_APP_GIT_SHA: ${REACT_APP_GIT_SHA}
+      REACT_APP_BUILD_DATE: ${REACT_APP_BUILD_DATE}
+    ports:
+      - '3000:3000'
+      - '9222:9222'
+    volumes:
+      - ./app:/app
+
+  api:
+    image: node:16.13.2
+    container_name: cdkfullstack-api
+    restart: unless-stopped
+    working_dir: /api
+    command: bash -c "npm install && npm run start:dev"
+    environment:
+      NODE_ENV: development
+      PORT: 8000
+      DB_USER: cdkfullstack
+      DB_PASSWORD: cdkfullstack
+      DB_HOST: postgres
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./api:/api
+
+  postgres:
+    image: postgres:12-alpine
+    restart: unless-stopped
+    container_name: cdkfullstack-postgres
+    environment:
+      <<: *postgres-env
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: cdkfullstack-postgres-pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo Press 'y' to deploy $1
+
+read -s -n 1 k <&1
+
+if [[ $k != y ]] ; then
+  printf "\nQuit\n"
+else
+  if [ $1 = "app" ] || [ $1 = "app-staging" ]; then
+    echo deploying $1
+    REACT_APP_BUILD_DATE=$(date) REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) BUILD_ENV=$1 ./node_modules/.bin/cdk deploy
+  fi
+fi

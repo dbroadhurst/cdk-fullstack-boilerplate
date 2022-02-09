@@ -1,0 +1,15 @@
+{
+  "name": "cdk-full-stack-boilerplate",
+  "version": "1.0.0",
+  "description": "Full Stack CDK boilerplate",
+  "main": "index.js",
+  "scripts": {
+    "start": "REACT_APP_BUILD_DATE=$(date) REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) docker-compose -f docker-compose-dev.yml up --remove-orphans",
+    "clean": "find . -name node_modules -o -name package-lock.json | xargs sudo rm -rf",
+    "docker:clean": "docker stop $(docker ps -aq) && docker rm $(docker ps -aq)",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
