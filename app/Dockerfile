@@ -1,4 +1,4 @@
-FROM node:14.17.4 AS builder
+FROM node:16.3.0 AS builder
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ RUN npm install --no-optional
 RUN npm run build
 
 # Stage 2
-FROM nginx:1.21.1-alpine
+FROM nginx:1.21.6-alpine
 COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/site.conf /etc/nginx/sites-enabled/site.conf
 COPY --from=builder /app/build /var/www

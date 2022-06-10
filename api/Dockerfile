@@ -1,5 +1,5 @@
 # Stage 1 - transpile typescript into javascript and create static folder with seed data
-FROM node:16.13.2 AS builder
+FROM node:16.3.0 AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY . .
 RUN npm install && npm run build 
 
 # Stage 2 - build a production version (without devDependancies) of the node modules
-FROM node:16.13.2
+FROM node:16.3.0
 
 WORKDIR /app
 
